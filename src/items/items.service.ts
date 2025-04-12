@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Item } from './item.interface';
+import { escapeRegExp } from 'lodash';
 
 @Injectable()
 export class ItemsService {
@@ -19,6 +20,10 @@ export class ItemsService {
   }
 
   getItemsByName(name: string): Item {
-    return this.items.find((item) => new RegExp(name, 'gi').test(item.name));
+    const safeName = escapeRegExp(name);
+
+    return this.items.find((item) =>
+      new RegExp(safeName, 'gi').test(item.name),
+    );
   }
 }
